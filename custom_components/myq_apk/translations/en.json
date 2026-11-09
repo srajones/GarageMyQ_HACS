@@ -1,0 +1,101 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "myQ Authentication Mode",
+        "description": "Select an authentication method for your Chamberlain / LiftMaster myQ account.",
+        "menu_options": {
+          "mode_automated": "Automated Login (Username & Password)",
+          "mode_manual": "Manual Login (Browser OAuth URL Paste)"
+        }
+      },
+      "mode_automated": {
+        "title": "myQ Automated Login",
+        "description": "Enter your myQ account credentials. Your tokens will be obtained securely using OAuth2 + PKCE.",
+        "data": {
+          "username": "Email / Username",
+          "password": "Password"
+        }
+      },
+      "mode_manual": {
+        "title": "myQ Manual Browser Login",
+        "description": "1. Open the following authorization link in your web browser:\n\n{auth_url}\n\n2. Sign in to your myQ account.\n3. After signing in, your browser will redirect to a page beginning with `com.myqops://android?code=...`.\n4. Copy the entire URL from the browser address bar and paste it below.",
+        "data": {
+          "redirect_url": "Redirect URL or Authorization Code"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate myQ Account",
+        "description": "Your myQ session has expired or the refresh token was rejected. Please re-enter your credentials to restore connectivity.",
+        "data": {
+          "username": "Email / Username",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to myQ cloud servers. Please check your internet connection.",
+      "invalid_auth": "Invalid email/username or password.",
+      "invalid_grant": "OAuth refresh token was rejected. Re-authentication required.",
+      "no_code": "No authorization code found in the provided redirect URL.",
+      "unknown": "An unexpected error occurred while communicating with myQ."
+    },
+    "abort": {
+      "already_configured": "This myQ account is already configured in Home Assistant.",
+      "reauth_successful": "Re-authentication was successful. Session tokens updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "myQ Polling Options",
+        "description": "Configure the background polling interval for your myQ devices. To prevent cloud rate-limiting and account lockout, a random ±20-second jitter is automatically applied to every cycle.",
+        "data": {
+          "scan_interval": "Scan Interval (seconds, 60–600)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "cover": {
+      "garage_door": {
+        "name": "Garage Door"
+      }
+    },
+    "light": {
+      "work_light": {
+        "name": "Work Light"
+      }
+    },
+    "binary_sensor": {
+      "problem": {
+        "name": "Problem"
+      },
+      "connectivity": {
+        "name": "Cloud Connectivity"
+      }
+    },
+    "sensor": {
+      "door_status": {
+        "name": "Door Status"
+      },
+      "last_event": {
+        "name": "Last Event"
+      },
+      "wifi_signal": {
+        "name": "Wi-Fi Signal"
+      },
+      "battery": {
+        "name": "Battery"
+      },
+      "session_health": {
+        "name": "Session Health"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh Status Now"
+      }
+    }
+  }
+}

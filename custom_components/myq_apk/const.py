@@ -135,6 +135,8 @@ CONF_AUTH_MODE: Final[str] = "auth_mode"
 CONF_SCAN_INTERVAL: Final[str] = "scan_interval"
 CONF_REDIRECT_URL: Final[str] = "redirect_url"
 CONF_CODE_VERIFIER: Final[str] = "code_verifier"
+CONF_USERNAME: Final[str] = "username"
+CONF_PASSWORD: Final[str] = "password"
 
 AUTH_MODE_AUTOMATED: Final[str] = "automated"  # Mode A (PKCE + credentials)
 AUTH_MODE_MANUAL: Final[str] = "manual"  # Mode B (browser redirect URL paste)
