@@ -74,7 +74,8 @@ class MyQRefreshButton(
         """Return unified DeviceInfo."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},

@@ -45,6 +45,7 @@ TO_REDACT = {
     "code",
     "code_verifier",
     "created_by",
+    "unique_id",
 }
 
 
@@ -101,7 +102,7 @@ async def async_get_config_entry_diagnostics(
             "title": entry.title,
             "data": dict(entry.data),
             "options": dict(entry.options),
-            "unique_id": entry.unique_id,
+            "unique_id": "**REDACTED**",
         },
         "client": client_info,
         "coordinator_devices": coord_data,

@@ -110,7 +110,8 @@ class MyQDoorStatusSensor(
         """Return unified DeviceInfo."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -164,7 +165,8 @@ class MyQLastEventSensor(
         """Return unified DeviceInfo."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -180,7 +182,8 @@ class MyQLastEventSensor(
     @property
     def native_value(self) -> Optional[datetime]:
         """Return parsed datetime of last update event."""
-        state = self.device_data.get("state", {})
+        raw_state = self.device_data.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         raw_timestamp = state.get("last_update") or state.get("updated_date")
         return _parse_iso_datetime(raw_timestamp)
 
@@ -220,7 +223,8 @@ class MyQWifiSignalSensor(
         """Return unified DeviceInfo."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -247,14 +251,16 @@ class MyQWifiSignalSensor(
 
     def _get_raw_signal(self) -> Optional[str]:
         """Retrieve signal strength from device or parent gateway."""
-        state = self.device_data.get("state", {})
+        raw_state = self.device_data.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         sig = state.get("wifi_signal_strength")
         if sig is not None:
             return str(sig)
 
         parent_serial = MyQClient.get_parent_serial_number(self.device_data)
         if parent_serial and parent_serial in self.coordinator.data:
-            parent_state = self.coordinator.data[parent_serial].get("state", {})
+            parent_raw = self.coordinator.data[parent_serial].get("state")
+            parent_state = parent_raw if isinstance(parent_raw, dict) else {}
             p_sig = parent_state.get("wifi_signal_strength")
             if p_sig is not None:
                 return str(p_sig)
@@ -309,7 +315,8 @@ class MyQBatterySensor(
         """Return unified DeviceInfo."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -325,21 +332,23 @@ class MyQBatterySensor(
     @property
     def native_value(self) -> Optional[int]:
         """Return battery percentage if present."""
-        state = self.device_data.get("state", {})
+        raw_state = self.device_data.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         raw_pct = state.get("battery_percentage")
         if raw_pct is not None:
             try:
                 val = int(raw_pct)
                 if 0 <= val <= 100:
                     return val
-            except (ValueError, TypeError):
+            except (ValueError, TypeError, OverflowError):
                 pass
         return None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return battery voltage and operational backup state."""
-        state = self.device_data.get("state", {})
+        raw_state = self.device_data.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         return {
             "battery_voltage": state.get("battery_voltage"),
             "battery_backup_state": state.get("battery_backup_state"),
@@ -385,7 +394,8 @@ class MyQSessionHealthSensor(
         """Return unified DeviceInfo."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},

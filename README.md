@@ -66,7 +66,7 @@ To permanently prevent account lockouts, API bans, and credential exhaustion, th
 | **2** | **Dual Login Modes in UI** | Supports **Mode A** (automated OAuth2 + PKCE exchange with username/password) and **Mode B** (manual browser OAuth2 flow where you copy/paste the `com.myqops://android?code=...` redirect URL), allowing you to bypass any web CAPTCHAs or MFA challenges. |
 | **3** | **Single-Flight Rolling Refresh Tokens** | Token refreshes are synchronized with an `asyncio.Lock` single-flight gate so multiple concurrent requests trigger **exactly one** network refresh. New rolling refresh tokens are atomically persisted to `ConfigEntry.data` immediately. Proactive refresh occurs 5 minutes prior to expiration; reactive refresh runs once on HTTP 401. |
 | **4** | **TLS Impersonation & Exact Headers** | Uses `curl_cffi` to match the TLS fingerprint of an Android 14 mobile device. Every API request transmits the exact header fingerprint extracted from the official APK, including persistent client installation UUIDs. |
-| **5** | **Human-Like Polling with Jitter & Fast Burst** | Polling defaults to **180s ± 20s random jitter** (configurable between 60s and 600s in Options). When a command (open/close/light) is dispatched, the coordinator temporarily activates a **5-second fast-burst mode** (for up to 35 seconds) to capture door transit without flooding the cloud. |
+| **5** | **Human-Like Polling with Jitter & Fast Burst** | Polling defaults to **180s ± 20s random jitter** (configurable between 60s and 600s in Options). When a garage door command (open/close) is dispatched, the coordinator temporarily activates a **5-second fast-burst mode** (for up to 35 seconds) to capture physical door transit without flooding the cloud, while light toggling triggers an immediate status refresh. |
 | **6** | **Zero Live Test Traffic** | All test suites and development fixtures use 100% mocked HTTP responses; live Chamberlain cloud services are never touched during automated verification. |
 
 ---
@@ -236,7 +236,7 @@ Click **Reconfigure** on the integration card to re-enter your credentials. The 
 Yes! All hubs, garage door openers, and lamp modules linked to your myQ account are automatically discovered and configured with individual entities.
 
 ### 4. What is fast-burst polling?
-When you send an open, close, or light toggle command from Home Assistant, the integration temporarily switches from its 180s cycle to 5s burst polling (up to 35s). This gives you rapid state feedback in your dashboard while keeping overall daily cloud traffic minimal.
+When you send an open or close command to a garage door from Home Assistant, the integration temporarily switches from its 180s cycle to 5s burst polling (up to 35s) to follow physical door transit until the door reaches its target state. Light toggle commands trigger an immediate status refresh instead of transit burst polling. This gives you rapid state feedback in your dashboard while keeping overall daily cloud traffic minimal.
 
 ---
 

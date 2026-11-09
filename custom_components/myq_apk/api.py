@@ -383,6 +383,11 @@ class MyQClient:
         current_refresh_timestamp = self._last_refresh_time
 
         async with self._refresh_lock:
+            if not self.refresh_token:
+                raise MyQInvalidGrantError(
+                    "OAuth refresh token is missing or was revoked; re-authentication required"
+                )
+
             # Check if another coroutine just completed a refresh while we waited for the lock
             if not force:
                 if (
@@ -853,7 +858,8 @@ class MyQClient:
         path = f"/api/{API_VERSION}/Accounts/{acc_id}/Devices"
         data = await self._request("GET", path)
         if isinstance(data, dict):
-            items = data.get("items", [])
+            raw_items = data.get("items")
+            items = raw_items if isinstance(raw_items, list) else []
         elif isinstance(data, list):
             items = data
         else:

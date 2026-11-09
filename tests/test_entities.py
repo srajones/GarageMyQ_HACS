@@ -360,6 +360,7 @@ async def test_diagnostics_redacts_sensitive_keys(mock_hass: Any, mock_coordinat
     assert entry_data[CONF_REFRESH_TOKEN] == "**REDACTED**"
     assert entry_data[CONF_USERNAME] == "**REDACTED**"
     assert entry_data[CONF_ACCOUNT_ID] == "**REDACTED**"
+    assert diagnostics["entry"]["unique_id"] == "**REDACTED**"
 
     # Non-sensitive structure remains intact
     assert diagnostics["entry"]["title"] == "myQ (Home Garage)"

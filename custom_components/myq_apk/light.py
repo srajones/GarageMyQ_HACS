@@ -28,12 +28,12 @@ def has_light_capability(device: dict[str, Any]) -> bool:
     if MyQClient.is_lamp(device):
         return True
 
-    state = device.get("state", {})
-    if isinstance(state, dict):
-        if "lamp_state" in state:
-            return True
-        if "attached_work_light_error_present" in state:
-            return True
+    raw_state = device.get("state")
+    state = raw_state if isinstance(raw_state, dict) else {}
+    if "lamp_state" in state:
+        return True
+    if "attached_work_light_error_present" in state:
+        return True
 
     capabilities = device.get("capabilities", {})
     if isinstance(capabilities, dict):
@@ -94,7 +94,8 @@ class MyQWorkLight(CoordinatorEntity[MyQDataUpdateCoordinator], LightEntity):
         """Return unified DeviceInfo matching the parent opener or gateway."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -110,7 +111,8 @@ class MyQWorkLight(CoordinatorEntity[MyQDataUpdateCoordinator], LightEntity):
     @property
     def is_on(self) -> bool:
         """Return True if the light is on."""
-        state = self.device_data.get("state", {})
+        raw_state = self.device_data.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         lamp_state = str(state.get("lamp_state", "")).strip().lower()
         return lamp_state in ("on", "true", "1")
 

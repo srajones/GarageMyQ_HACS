@@ -85,7 +85,8 @@ class MyQProblemBinarySensor(
         """Return unified DeviceInfo linking to the opener device."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -102,7 +103,8 @@ class MyQProblemBinarySensor(
     def is_on(self) -> bool:
         """Return True if an obstruction, reversal, stall, or hardware fault is detected."""
         device = self.device_data
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         door_state = MyQClient.get_door_state(device)
 
         # 1. Door stopped or auto-reversed
@@ -134,7 +136,8 @@ class MyQProblemBinarySensor(
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return fault and stall diagnostics."""
         device = self.device_data
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         return {
             "door_state": MyQClient.get_door_state(device),
             "stalled": self.coordinator.is_device_stalled(self._serial_number),
@@ -183,7 +186,8 @@ class MyQConnectivityBinarySensor(
         """Return unified DeviceInfo linking to the device."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -206,7 +210,8 @@ class MyQConnectivityBinarySensor(
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return connectivity details."""
-        state = self.device_data.get("state", {})
+        raw_state = self.device_data.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         return {
             "online": state.get("online"),
             "last_is_online_change": state.get("last_is_online_change"),

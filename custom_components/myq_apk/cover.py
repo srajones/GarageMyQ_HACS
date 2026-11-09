@@ -71,6 +71,7 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
         super().__init__(coordinator)
         self._serial_number = serial_number
         self._attr_unique_id = f"{serial_number}_cover"
+        self._is_actuating = False
 
     @property
     def device_data(self) -> dict[str, Any]:
@@ -88,7 +89,8 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
         """Return unified DeviceInfo linking all opener entities together."""
         device = self.device_data
         parent_serial = MyQClient.get_parent_serial_number(device)
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
 
         info = DeviceInfo(
             identifiers={(DOMAIN, self._serial_number)},
@@ -131,7 +133,8 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return additional telemetry and physical diagnostics."""
         device = self.device_data
-        state = device.get("state", {})
+        raw_state = device.get("state")
+        state = raw_state if isinstance(raw_state, dict) else {}
         return {
             "door_state": MyQClient.get_door_state(device),
             "last_update": state.get("last_update"),
@@ -145,6 +148,13 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
 
     async def async_open_cover(self, **kwargs: Any) -> None:
         """Open the garage door enforcing idempotency and timeout non-retry invariants."""
+        if self._is_actuating:
+            _LOGGER.info(
+                "Command already in flight for door %s; suppressing concurrent open command",
+                self._serial_number,
+            )
+            return
+
         current_state = MyQClient.get_door_state(self.device_data)
 
         # Idempotency Invariant: no-op if already open or opening (Requirement R4.1)
@@ -156,6 +166,7 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
             )
             return
 
+        self._is_actuating = True
         _LOGGER.info("Sending open command to garage door %s", self._serial_number)
         try:
             await self.coordinator.client.open_door(self._serial_number)
@@ -172,9 +183,18 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
         except Exception as exc:
             _LOGGER.error("Failed to open garage door %s: %s", self._serial_number, exc)
             raise
+        finally:
+            self._is_actuating = False
 
     async def async_close_cover(self, **kwargs: Any) -> None:
         """Close the garage door enforcing idempotency and timeout non-retry invariants."""
+        if self._is_actuating:
+            _LOGGER.info(
+                "Command already in flight for door %s; suppressing concurrent close command",
+                self._serial_number,
+            )
+            return
+
         current_state = MyQClient.get_door_state(self.device_data)
 
         # Idempotency Invariant: no-op if already closed or closing (Requirement R4.1)
@@ -186,6 +206,7 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
             )
             return
 
+        self._is_actuating = True
         _LOGGER.info("Sending close command to garage door %s", self._serial_number)
         try:
             await self.coordinator.client.close_door(self._serial_number)
@@ -202,3 +223,5 @@ class MyQGarageDoor(CoordinatorEntity[MyQDataUpdateCoordinator], CoverEntity):
         except Exception as exc:
             _LOGGER.error("Failed to close garage door %s: %s", self._serial_number, exc)
             raise
+        finally:
+            self._is_actuating = False
