@@ -4,6 +4,10 @@
 [![homeassistant](https://img.shields.io/badge/Home%20Assistant-2024.1.0+-blue.svg?style=for-the-badge)](https://www.home-assistant.io/)
 [![manifest_version](https://img.shields.io/badge/Version-1.0.0-green.svg?style=for-the-badge)](custom_components/myq_apk/manifest.json)
 [![license](https://img.shields.io/badge/License-MIT-orange.svg?style=for-the-badge)](LICENSE)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-FFDD00.svg?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/srajones)
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=srajones&repository=GarageMyQ_HACS&category=integration)
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=myq_apk)
 
 A production-grade, self-healing Home Assistant custom integration for **Chamberlain and LiftMaster myQ** garage door openers and accessories. 
 
@@ -27,7 +31,8 @@ Built directly from reverse-engineering the official Android APK (`v5.323.0.1132
 8. [Diagnostics & Privacy](#diagnostics--privacy)
 9. [Troubleshooting & FAQ](#troubleshooting--faq)
 10. [Technical Protocol Reference](#technical-protocol-reference)
-11. [Disclaimer](#disclaimer)
+11. [Support & Donations](#support--donations)
+12. [Disclaimer](#disclaimer)
 
 ---
 
@@ -111,15 +116,18 @@ All entities for a given garage door opener are grouped under a single unified H
 
 ### Method 1: HACS (Recommended)
 
-1. Ensure [HACS (Home Assistant Community Store)](https://hacs.xyz/) is installed.
-2. In Home Assistant, navigate to **HACS** > **Integrations**.
-3. Click the three dots `⋮` in the top right corner and select **Custom repositories**.
-4. Enter the repository details:
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=srajones&repository=GarageMyQ_HACS&category=integration)
+
+1. Click the button above to automatically open and add this repository to HACS, or follow manual steps:
+2. Ensure [HACS (Home Assistant Community Store)](https://hacs.xyz/) is installed.
+3. In Home Assistant, navigate to **HACS** > **Integrations**.
+4. Click the three dots `⋮` in the top right corner and select **Custom repositories**.
+5. Enter the repository details:
    - **Repository**: `https://github.com/srajones/GarageMyQ_HACS`
    - **Type**: `Integration`
-5. Click **Add**.
-6. Search for **Chamberlain / LiftMaster myQ (APK)** in the integration list and click **Download**.
-7. Restart Home Assistant when prompted.
+6. Click **Add**.
+7. Search for **GarageMyQ (myQ APK Direct Protocol)** in the integration list and click **Download**.
+8. Restart Home Assistant when prompted.
 
 ### Method 2: Manual Installation
 
@@ -245,6 +253,18 @@ When you send an open or close command to a garage door from Home Assistant, the
 For comprehensive protocol reverse-engineering notes, endpoints, cryptographic specifications, header fingerprints, and payload schemas extracted from the Android APK, see:
 
 📖 **[docs/PROTOCOL.md](docs/PROTOCOL.md)**
+
+---
+
+## Support & Donations
+
+If this integration helped restore your garage door automation in Home Assistant, please consider buying a coffee to support continued maintenance and rapid updates against future myQ protocol changes:
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-FFDD00.svg?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/srajones)
+
+Or support directly at: [https://buymeacoffee.com/srajones](https://buymeacoffee.com/srajones)
+
+Your support is greatly appreciated! Every coffee helps keep this project independent, active, and maintained.
 
 ---
 
