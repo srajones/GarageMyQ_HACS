@@ -50,7 +50,7 @@
 | M1 | APK Protocol Deconstruction | Unpack APK via `rea/`, extract protocol details, write `docs/PROTOCOL.md` | M0 | DONE |
 | M2 | Core Auth & API Client | Implement `const.py` and `api.py` with anti-lockout safeguards | M1 | DONE |
 | M3 | Home Assistant Integration | Implement `__init__.py`, `config_flow.py`, `coordinator.py`, `cover.py`, `light.py`, `binary_sensor.py`, `sensor.py`, `button.py`, `diagnostics.py`, translations | M2 | DONE |
-| M4 | HACS Packaging | Implement `hacs.json`, validate `manifest.json` and packaging structure | M3 | PLANNED |
+| M4 | HACS Packaging | Implement `hacs.json`, validate `manifest.json` and packaging structure | M3 | DONE |
 | M5 | Adversarial Test Suite | Implement comprehensive tests in `tests/` with 100% mocked network calls | M3 | PLANNED |
 | M6 | Forensic Audit & Final Delivery | Forensic audit verification, clean gate checks, and GitHub push | M4, M5 | PLANNED |
 
